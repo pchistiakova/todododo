@@ -144,6 +144,13 @@ function createWindow() {
   mainWindow.on('resize', debounceSaveWindowState)
   mainWindow.on('move', debounceSaveWindowState)
 
+  mainWindow.on('show', () => {
+    if (captureClosedAt > 0 && Date.now() - captureClosedAt < 1000 && !mainWasVisible) {
+      mainWindow?.hide()
+      if (process.platform === 'darwin') app.hide()
+    }
+  })
+
   mainWindow.on('close', (e) => {
     if (process.platform === 'darwin' && !isQuitting) {
       e.preventDefault()
@@ -247,7 +254,11 @@ function showCaptureWindow() {
 
   if (Date.now() - captureClosedAt < 500) return
 
-  mainWasVisible = mainWindow?.isVisible() ?? false
+  mainWasVisible = mainWindow?.isFocused() ?? false
+
+  if (!mainWasVisible && mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.hide()
+  }
 
   const activeDisplay = screen.getDisplayNearestPoint(screen.getCursorScreenPoint())
   const { x, y, width } = activeDisplay.workArea
@@ -283,8 +294,10 @@ function showCaptureWindow() {
   captureWindow.on('closed', () => {
     captureClosedAt = Date.now()
     captureWindow = null
-    if (!mainWasVisible && process.platform === 'darwin') {
-      setTimeout(() => app.hide(), 50)
+    if (mainWasVisible && mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.show()
+    } else if (process.platform === 'darwin') {
+      app.hide()
     }
   })
 }
