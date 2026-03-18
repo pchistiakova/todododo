@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      background: rgba(255, 255, 255, 0.97);
+      -webkit-app-region: no-drag;
+      overflow: hidden;
+    }
+    .container {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    input {
+      width: 100%;
+      font-size: 13px;
+      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      outline: none;
+      background: #fff;
+      color: #374151;
+      transition: border-color 0.15s;
+    }
+    input:focus {
+      border-color: #9ca3af;
+    }
+    input::placeholder {
+      color: #d1d5db;
+    }
+    .hint {
+      font-size: 11px;
+      color: #d1d5db;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <input id="task-input" type="text" placeholder="What needs to be done?" autofocus />
+    <div class="hint">Enter to save · Esc to close</div>
+  </div>
+  <script>
+    const input = document.getElementById('task-input');
+    input.addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter') {
+        const title = input.value.trim();
+        if (title) {
+          await window.captureApi.addTask(title);
+          input.value = '';
+        }
+        window.captureApi.close();
+      } else if (e.key === 'Escape') {
+        window.captureApi.close();
+      }
+    });
+    input.focus();
+  </script>
+</body>
+</html>

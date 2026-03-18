@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-surface-50 text-gray-800 antialiased;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+@layer components {
+  .drag-bar {
+    -webkit-app-region: drag;
+    height: 48px;
+  }
+
+  /* View transitions — enter and exit */
+  .view-enter {
+    animation: viewIn 0.2s cubic-bezier(0.2, 0, 0, 1) both;
+  }
+
+  .view-exit {
+    animation: viewOut 0.12s cubic-bezier(0.4, 0, 1, 1) both;
+    pointer-events: none;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.25s cubic-bezier(0.2, 0, 0, 1) both;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 12px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  @keyframes viewIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes viewOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* Tiptap editor */
+.tiptap {
+  outline: none;
+}
+.tiptap p {
+  margin: 0.25em 0;
+}
+.tiptap h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0.75em 0 0.25em;
+}
+.tiptap ul {
+  list-style: disc;
+  padding-left: 1.25em;
+  margin: 0.25em 0;
+}
+.tiptap ol {
+  list-style: decimal;
+  padding-left: 1.25em;
+  margin: 0.25em 0;
+}
+.tiptap li {
+  margin: 0.15em 0;
+}
+.tiptap blockquote {
+  border-left: 3px solid #d1d5db;
+  padding-left: 0.75em;
+  margin: 0.5em 0;
+  color: #6b7280;
+  font-style: italic;
+}
+.tiptap strong {
+  font-weight: 600;
+}
+.tiptap em {
+  font-style: italic;
+}
+.tiptap s {
+  text-decoration: line-through;
+}
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #d1d5db;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Task list (checklist) — works in both editor and rendered views */
+ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 1.25em;
+  margin: 0.25em 0;
+}
+ul[data-type="taskList"] li {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0.2em 0;
+  margin-left: -1.25em;
+  padding-left: 0;
+}
+ul[data-type="taskList"] li > label {
+  flex-shrink: 0;
+}
+ul[data-type="taskList"] li > label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #d1d5db;
+  border-radius: 3px;
+  cursor: pointer;
+  display: block;
+  position: relative;
+  transition: all 0.15s;
+}
+ul[data-type="taskList"] li > label input[type="checkbox"]:checked {
+  background: #6366f1;
+  border-color: #6366f1;
+}
+ul[data-type="taskList"] li > label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+ul[data-type="taskList"] li > div {
+  flex: 1;
+}
+ul[data-type="taskList"] li > div p {
+  margin: 0;
+}
+ul[data-type="taskList"] li[data-checked="true"] > div {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* GPU-accelerated scrollable areas */
+.gpu-scroll {
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
+}
+
+/* Pure CSS fade at bottom edge of scrollable lists */
+.fade-scroll {
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to bottom, black calc(100% - 28px), transparent 100%);
+}
+
+/* Hide scrollbar but keep scrollability */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes search-flash {
+  0% { box-shadow: inset 0 0 0 2px var(--accent, #4f8fe6); border-radius: 8px; }
+  70% { box-shadow: inset 0 0 0 2px var(--accent, #4f8fe6); border-radius: 8px; }
+  100% { box-shadow: inset 0 0 0 0px transparent; border-radius: 8px; }
+}
+
+.search-highlight {
+  animation: search-flash 1.5s ease-out forwards;
+}
