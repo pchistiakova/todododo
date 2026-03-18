@@ -283,8 +283,8 @@ function showCaptureWindow() {
   captureWindow.on('closed', () => {
     captureClosedAt = Date.now()
     captureWindow = null
-    if (!mainWasVisible && mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.hide()
+    if (!mainWasVisible && process.platform === 'darwin') {
+      setTimeout(() => app.hide(), 50)
     }
   })
 }
