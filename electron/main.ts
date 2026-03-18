@@ -458,6 +458,7 @@ app.whenReady().then(() => {
   })
 
   app.on('activate', () => {
+    if (Date.now() - captureClosedAt < 500) return
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.show()
     } else {
